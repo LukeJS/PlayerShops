@@ -26,6 +26,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
+import org.spongepowered.api.service.economy.transaction.TransactionResult;
 import org.spongepowered.api.service.economy.transaction.TransferResult;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
@@ -71,6 +72,28 @@ public class BlockEventHandler {
                         lines.set(1, Text.of(quantity));
                         lines.set(2, Text.of(itemStack));
                         lines.set(3, Text.of(defaultCurrency.getSymbol(), price));
+
+                        double creationCost = PlayerShops.instance.configuration.creationCost;
+
+                        if (creationCost > 0.0) {
+                            Optional<UniqueAccount> account = PlayerShops.instance.economyService.getOrCreateAccount(player.getUniqueId());
+
+                            if (account.isPresent()) {
+                                TransactionResult result = account.get().withdraw(
+                                        defaultCurrency,
+                                        BigDecimal.valueOf(creationCost),
+                                        Cause.source(PlayerShops.instance).build()
+                                );
+
+                                if (result.getResult() == ResultType.ACCOUNT_NO_FUNDS) {
+                                    player.sendMessage(Text.of(TextColors.RED, "You need ", defaultCurrency.format(BigDecimal.valueOf(creationCost)) ," to create a shop"));
+                                    return;
+                                } else if (result.getResult() != ResultType.SUCCESS) {
+                                    player.sendMessage(Text.of(TextColors.RED, "Error during transaction"));
+                                    return;
+                                }
+                            }
+                        }
 
                         sign.offer(playerShopData);
                         sign.offer(lines);
