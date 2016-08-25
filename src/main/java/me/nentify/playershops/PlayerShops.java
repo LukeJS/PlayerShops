@@ -24,12 +24,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Plugin(id = PlayerShops.PLUGIN_ID, name = PlayerShops.PLUGIN_NAME, version = PlayerShops.PLUGIN_VERSION)
+@Plugin(id = PlayerShops.PLUGIN_ID, name = PlayerShops.PLUGIN_NAME)
 public class PlayerShops {
 
     public static final String PLUGIN_ID = "playershops";
     public static final String PLUGIN_NAME = "Player Shops";
-    public static final String PLUGIN_VERSION = "1.10.2-1.0.0";
 
     public static PlayerShops instance;
 
@@ -46,8 +45,6 @@ public class PlayerShops {
 
     @Listener
     public void onPreInit(GamePreInitializationEvent event) {
-        logger.info("Starting " + PLUGIN_NAME + " v" + PLUGIN_VERSION);
-
         instance = this;
 
         Sponge.getDataManager().register(PlayerShopData.class, ImmutablePlayerShopData.class, new PlayerShopDataManipulatorBuilder());
