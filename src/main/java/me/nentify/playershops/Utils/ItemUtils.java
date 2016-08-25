@@ -1,4 +1,4 @@
-package me.nentify.playershops.Utils;
+package me.nentify.playershops.utils;
 
 import org.spongepowered.api.item.inventory.ItemStack;
 
