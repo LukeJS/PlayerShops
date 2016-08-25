@@ -4,6 +4,7 @@ import me.nentify.playershops.PlayerShops;
 import me.nentify.playershops.ShopType;
 import me.nentify.playershops.data.PlayerShopData;
 import me.nentify.playershops.utils.ChestUtils;
+import me.nentify.playershops.utils.EconomyUtils;
 import net.minecraft.inventory.IInventory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -160,19 +161,22 @@ public class BlockEventHandler {
                                     if (shopType == ShopType.BUY) {
                                         if (ChestUtils.hasQuantityOfItems(inv, item, quantity)) {
                                             if ((player.getInventory().size() < player.getInventory().capacity())) {
-                                                TransferResult result = account.get().transfer(
+                                                ResultType result = EconomyUtils.transferWithTax(
+                                                        account.get(),
                                                         ownerAccount.get(),
                                                         defaultCurrency,
                                                         price,
-                                                        Cause.source(PlayerShops.instance).build());
+                                                        BigDecimal.valueOf(PlayerShops.instance.configuration.tax),
+                                                        Cause.source(PlayerShops.instance).build()
+                                                );
 
-                                                if (result.getResult() == ResultType.SUCCESS) {
+                                                if (result == ResultType.SUCCESS) {
                                                     ChestUtils.removeItems(inv, item);
                                                     player.getInventory().offer(item);
                                                     player.sendMessage(Text.of(TextColors.GREEN, "Bought ", quantity, " ", item, " for ", defaultCurrency.format(price), " from ", owner.getName()));
-                                                } else if (result.getResult() == ResultType.ACCOUNT_NO_FUNDS) {
+                                                } else if (result == ResultType.ACCOUNT_NO_FUNDS) {
                                                     player.sendMessage(Text.of(TextColors.RED, "You don't have enough money to buy this"));
-                                                } else if (result.getResult() == ResultType.ACCOUNT_NO_SPACE) {
+                                                } else if (result == ResultType.ACCOUNT_NO_SPACE) {
                                                     player.sendMessage(Text.of(TextColors.RED, owner.getName(), "'s account is full"));
                                                 } else {
                                                     player.sendMessage(Text.of(TextColors.RED, "Error during transaction"));
@@ -191,19 +195,24 @@ public class BlockEventHandler {
                                             Optional<Integer> slotWithSpace = ChestUtils.getSlotWithSpaceForItem(inv, item, quantity);
 
                                             if (slotWithSpace.isPresent()) {
-                                                TransferResult result = ownerAccount.get().transfer(
+                                                BigDecimal tax = BigDecimal.valueOf(PlayerShops.instance.configuration.tax);
+
+                                                ResultType result = EconomyUtils.transferWithTax(
                                                         account.get(),
+                                                        ownerAccount.get(),
                                                         defaultCurrency,
                                                         price,
-                                                        Cause.source(PlayerShops.instance).build());
+                                                        tax,
+                                                        Cause.source(PlayerShops.instance).build()
+                                                );
 
-                                                if (result.getResult() == ResultType.SUCCESS) {
+                                                if (result == ResultType.SUCCESS) {
                                                     inventoryStacks.poll(quantity);
                                                     ChestUtils.addItemsToSlot(inv, slotWithSpace.get(), item);
-                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price), " to ", owner.getName()));
-                                                } else if (result.getResult() == ResultType.ACCOUNT_NO_FUNDS) {
+                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price.multiply(BigDecimal.ONE.subtract(tax))), " to ", owner.getName()));
+                                                } else if (result == ResultType.ACCOUNT_NO_FUNDS) {
                                                     player.sendMessage(Text.of(TextColors.RED, "The shop owner has run out of money"));
-                                                } else if (result.getResult() == ResultType.ACCOUNT_NO_SPACE) {
+                                                } else if (result == ResultType.ACCOUNT_NO_SPACE) {
                                                     player.sendMessage(Text.of(TextColors.RED, "Your account is full!"));
                                                 } else {
                                                     player.sendMessage(Text.of(TextColors.RED, "Error during transaction"));

@@ -14,6 +14,7 @@ public class Configuration {
     private CommentedConfigurationNode config;
 
     public double creationCost;
+    public double tax;
 
     public Configuration(Path configPath) throws IOException {
         loader = HoconConfigurationLoader.builder().setPath(configPath).build();
@@ -24,6 +25,7 @@ public class Configuration {
         config = loader.load();
 
         creationCost = check(config.getNode("creation-cost"), 0.0, "Cost to create a shop").getDouble();
+        tax = check(config.getNode("tax"), 0.0, "Tax on transactions made with shops (decimal between 0 and 1)").getDouble();
     }
 
     private CommentedConfigurationNode check(CommentedConfigurationNode node, Object defaultValue, String comment) {
