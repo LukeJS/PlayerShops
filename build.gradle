@@ -40,5 +40,5 @@ minecraft {
 }
 
 dependencies {
-    compile('org.spongepowered:spongeforge:1.10.2-2052-5.0.0-BETA-1675:dev')
+    compile('org.spongepowered:spongeapi:5.0.0-SNAPSHOT')
 }
