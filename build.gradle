@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'org.spongepowered.plugin' version '0.6'
+    id 'maven'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group = 'me.nentify.playershops'
+version = '1.10.2-1.0.0'
+description = 'Allows players to create shops'
+
+repositories {
+    maven {
+        name = 'sponge'
+        url = 'http://repo.spongepowered.org/maven'
+    }
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+minecraft {
+    forgeVersion = '2052'
+    mappings = 'snapshot_20160628'
+    runDir = 'run'
+}
+
+dependencies {
+    compile('org.spongepowered:spongeforge:1.10.2-2052-5.0.0-BETA-1675:dev')
+}
