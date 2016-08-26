@@ -143,6 +143,11 @@ public class BlockEventHandler {
                     int quantity = playerShopData.quantity().get();
                     UUID ownerUuid = playerShopData.getOwnerUuid();
 
+                    if (player.getUniqueId().equals(ownerUuid)) {
+                        player.sendMessage(Text.of(TextColors.RED, "You can't use your own shop, silly!"));
+                        return;
+                    }
+
                     item.setQuantity(quantity);
 
                     Optional<UniqueAccount> account = PlayerShops.instance.economyService.getOrCreateAccount(player.getUniqueId());
