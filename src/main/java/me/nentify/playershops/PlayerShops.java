@@ -9,6 +9,7 @@ import me.nentify.playershops.data.PlayerShopDataManipulatorBuilder;
 import me.nentify.playershops.events.BlockEventHandler;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.GameRegistry;
 import org.spongepowered.api.Sponge;
@@ -46,9 +47,6 @@ public class PlayerShops {
     @Inject
     public Logger logger;
 
-    @Inject
-    public GameRegistry gameRegistry;
-
     public EconomyService economyService;
 
     // Stores shop data after a player uses the /shop command to be later put on to a sign placed by the player
@@ -60,7 +58,7 @@ public class PlayerShops {
 
         try {
             configuration = new Configuration(configPath);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

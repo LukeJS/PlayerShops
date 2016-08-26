@@ -57,6 +57,11 @@ public class BlockEventHandler {
                     Optional<PlayerShopData> playerShopDataOptional = PlayerShops.takePlayerShopData(player.getUniqueId());
 
                     if (playerShopDataOptional.isPresent()) {
+                        if (!PlayerShops.instance.configuration.limitToWorlds.contains(event.getTargetWorld().getName())) {
+                            player.sendMessage(Text.of(TextColors.RED, "You can not create a shop in this world"));
+                            return;
+                        }
+
                         PlayerShopData playerShopData = playerShopDataOptional.get();
 
                         ShopType shopType = playerShopData.getShopType();
