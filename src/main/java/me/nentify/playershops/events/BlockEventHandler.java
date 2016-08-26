@@ -2,6 +2,7 @@ package me.nentify.playershops.events;
 
 import me.nentify.playershops.PlayerShops;
 import me.nentify.playershops.ShopType;
+import me.nentify.playershops.config.Configuration;
 import me.nentify.playershops.data.PlayerShopData;
 import me.nentify.playershops.utils.ChestUtils;
 import me.nentify.playershops.utils.EconomyUtils;
@@ -37,6 +38,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.math.BigDecimal;
+import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,7 +60,7 @@ public class BlockEventHandler {
                     Optional<PlayerShopData> playerShopDataOptional = PlayerShops.takePlayerShopData(player.getUniqueId());
 
                     if (playerShopDataOptional.isPresent()) {
-                        if (!PlayerShops.instance.configuration.limitToWorlds.contains(event.getTargetWorld().getName())) {
+                        if (Configuration.limitToWorlds != null && !Configuration.limitToWorlds.isEmpty() && !Configuration.limitToWorlds.contains(event.getTargetWorld().getName())) {
                             player.sendMessage(Text.of(TextColors.RED, "You can not create a shop in this world"));
                             return;
                         }
@@ -79,7 +82,7 @@ public class BlockEventHandler {
                         lines.set(2, Text.of(itemStack));
                         lines.set(3, Text.of(defaultCurrency.getSymbol(), price));
 
-                        double creationCost = PlayerShops.instance.configuration.creationCost;
+                        double creationCost = Configuration.creationCost;
 
                         if (creationCost > 0.0) {
                             Optional<UniqueAccount> account = PlayerShops.instance.economyService.getOrCreateAccount(player.getUniqueId());
@@ -171,7 +174,7 @@ public class BlockEventHandler {
                                                         ownerAccount.get(),
                                                         defaultCurrency,
                                                         price,
-                                                        BigDecimal.valueOf(PlayerShops.instance.configuration.tax),
+                                                        BigDecimal.valueOf(Configuration.tax),
                                                         Cause.source(PlayerShops.instance).build()
                                                 );
 
@@ -200,7 +203,7 @@ public class BlockEventHandler {
                                             Optional<Integer> slotWithSpace = ChestUtils.getSlotWithSpaceForItem(inv, item, quantity);
 
                                             if (slotWithSpace.isPresent()) {
-                                                BigDecimal tax = BigDecimal.valueOf(PlayerShops.instance.configuration.tax);
+                                                BigDecimal tax = BigDecimal.valueOf(Configuration.tax);
 
                                                 ResultType result = EconomyUtils.transferWithTax(
                                                         account.get(),
@@ -214,7 +217,7 @@ public class BlockEventHandler {
                                                 if (result == ResultType.SUCCESS) {
                                                     inventoryStacks.poll(quantity);
                                                     ChestUtils.addItemsToSlot(inv, slotWithSpace.get(), item);
-                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price.multiply(BigDecimal.ONE.subtract(tax))), " to ", owner.getName()));
+                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price), " to ", owner.getName()));
                                                 } else if (result == ResultType.ACCOUNT_NO_FUNDS) {
                                                     player.sendMessage(Text.of(TextColors.RED, "The shop owner has run out of money"));
                                                 } else if (result == ResultType.ACCOUNT_NO_SPACE) {

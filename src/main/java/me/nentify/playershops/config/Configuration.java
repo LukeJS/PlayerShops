@@ -1,10 +1,9 @@
 package me.nentify.playershops.config;
 
-import com.google.common.reflect.TypeToken;
+import ninja.leaping.configurate.Types;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,11 +16,11 @@ public class Configuration {
     private ConfigurationLoader<CommentedConfigurationNode> loader;
     private CommentedConfigurationNode config;
 
-    public double creationCost;
-    public double tax;
-    public List<String> limitToWorlds;
+    public static double creationCost;
+    public static double tax;
+    public static List<String> limitToWorlds;
 
-    public Configuration(Path configPath) throws IOException, ObjectMappingException {
+    public Configuration(Path configPath) throws IOException {
         loader = HoconConfigurationLoader.builder().setPath(configPath).build();
 
         if (!Files.exists(configPath))
@@ -31,7 +30,7 @@ public class Configuration {
 
         creationCost = check(config.getNode("creation-cost"), 0.0, "Cost to create a shop").getDouble();
         tax = check(config.getNode("tax"), 0.0, "Tax on transactions made with shops (decimal between 0 and 1)").getDouble();
-        limitToWorlds = check(config.getNode("limit-to-worlds"), new ArrayList<>(), "Limit shop creation to certain worlds").getList(TypeToken.of(String.class));
+        limitToWorlds = check(config.getNode("limit-to-worlds"), new ArrayList<String>(), "Limit shop creation to certain worlds - Shops can be created in all worlds if left empty").getList(Types::asString);
 
         loader.save(config);
     }

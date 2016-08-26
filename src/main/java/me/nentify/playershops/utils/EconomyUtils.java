@@ -23,7 +23,9 @@ public class EconomyUtils {
 
         if (deposit.getResult() != ResultType.SUCCESS) {
             to.withdraw(currency, amount.multiply(tax), cause);
-            result = deposit.getResult();
+
+            if (result == ResultType.SUCCESS)
+                result = deposit.getResult();
         }
 
         return result;
