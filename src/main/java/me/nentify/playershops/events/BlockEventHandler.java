@@ -135,6 +135,11 @@ public class BlockEventHandler {
                 Optional<PlayerShopData> playerShopDataOptional = sign.get(PlayerShopData.class);
 
                 if (playerShopDataOptional.isPresent()) {
+                    if (player.get(Keys.IS_SNEAKING).orElse(false)) {
+                        player.sendMessage(Text.of(TextColors.RED, "You can not sell items while sneaking"));
+                        return;
+                    }
+
                     PlayerShopData playerShopData = playerShopDataOptional.get();
 
                     ShopType shopType = playerShopData.getShopType();
