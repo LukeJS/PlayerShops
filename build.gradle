@@ -21,7 +21,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 archivesBaseName = 'PlayerShops'
 group = 'me.nentify.playershops'
-version = '1.10.2-1.1.0'
+version = '1.10.2-1.1.1'
 description = 'Allows players to create shops'
 
 repositories {
