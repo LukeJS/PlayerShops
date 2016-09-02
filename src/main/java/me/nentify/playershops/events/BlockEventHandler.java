@@ -136,7 +136,7 @@ public class BlockEventHandler {
 
                 if (playerShopDataOptional.isPresent()) {
                     if (player.get(Keys.IS_SNEAKING).orElse(false)) {
-                        player.sendMessage(Text.of(TextColors.RED, "You can not sell items while sneaking"));
+                        player.sendMessage(Text.of(TextColors.RED, "You can not use this sign while sneaking"));
                         return;
                     }
 
