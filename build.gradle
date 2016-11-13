@@ -35,11 +35,11 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 minecraft {
-    forgeVersion = '2052'
+    forgeVersion = '2125'
     mappings = 'snapshot_20160628'
     runDir = 'run'
 }
 
 dependencies {
-    compile('org.spongepowered:spongeapi:5.0.0-SNAPSHOT')
+    compile('org.spongepowered:spongeapi:5.0.0')
 }
