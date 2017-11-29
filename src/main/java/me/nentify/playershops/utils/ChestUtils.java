@@ -8,7 +8,7 @@ import java.util.Optional;
 public class ChestUtils {
 
     public static Optional<Integer> getSlotWithSpaceForItem(IInventory inv, ItemStack itemStack, int stackSize) {
-        if (inv.getInventoryStackLimit() <= stackSize) {
+        if (inv.getInventoryStackLimit() < stackSize) {
             return Optional.empty();
         }
 

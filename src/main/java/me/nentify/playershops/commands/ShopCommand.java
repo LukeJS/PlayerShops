@@ -27,6 +27,11 @@ public class ShopCommand implements CommandExecutor {
         Optional<Integer> quantityOptional = args.getOne("quantity");
 
         if (src instanceof Player) {
+            if (price < 0) {
+                src.sendMessage(Text.of(TextColors.RED, "Price must be 0 or greater"));
+                return CommandResult.success();
+            }
+
             Player player = (Player) src;
 
             Optional<ItemStack> itemStackOptional = player.getItemInHand(HandTypes.MAIN_HAND);
@@ -34,12 +39,12 @@ public class ShopCommand implements CommandExecutor {
             if (itemStackOptional.isPresent()) {
                 ItemStack itemStack = itemStackOptional.get();
 
-                int quantity;
+                int quantity = quantityOptional.orElseGet(itemStack::getQuantity);
 
-                if (quantityOptional.isPresent())
-                    quantity = quantityOptional.get();
-                else
-                    quantity = itemStack.getQuantity();
+                if (quantity <= 0) {
+                    src.sendMessage(Text.of(TextColors.RED, "Quantity must be 0 or greater"));
+                    return CommandResult.success();
+                }
 
                 PlayerShopData serverShopData = new PlayerShopData(shopType, itemStack, price, quantity, player.getUniqueId());
                 PlayerShops.addPlayerShopData(player.getUniqueId(), serverShopData);

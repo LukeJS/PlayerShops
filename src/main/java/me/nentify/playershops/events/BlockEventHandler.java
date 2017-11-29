@@ -189,9 +189,9 @@ public class BlockEventHandler {
                                                 );
 
                                                 if (result == ResultType.SUCCESS) {
+                                                    player.sendMessage(Text.of(TextColors.GREEN, "Bought ", quantity, " ", item, " for ", defaultCurrency.format(price), " from ", owner.getName()));
                                                     ChestUtils.removeItems(inv, item);
                                                     player.getInventory().offer(item);
-                                                    player.sendMessage(Text.of(TextColors.GREEN, "Bought ", quantity, " ", item, " for ", defaultCurrency.format(price), " from ", owner.getName()));
                                                 } else if (result == ResultType.ACCOUNT_NO_FUNDS) {
                                                     player.sendMessage(Text.of(TextColors.RED, "You don't have enough money to buy this"));
                                                 } else if (result == ResultType.ACCOUNT_NO_SPACE) {
@@ -225,9 +225,9 @@ public class BlockEventHandler {
                                                 );
 
                                                 if (result == ResultType.SUCCESS) {
+                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price), " to ", owner.getName()));
                                                     inventoryStacks.poll(quantity);
                                                     ChestUtils.addItemsToSlot(inv, slotWithSpace.get(), item);
-                                                    player.sendMessage(Text.of(TextColors.GREEN, "Sold ", quantity, " ", item, " for ", defaultCurrency.format(price), " to ", owner.getName()));
                                                 } else if (result == ResultType.ACCOUNT_NO_FUNDS) {
                                                     player.sendMessage(Text.of(TextColors.RED, "The shop owner has run out of money"));
                                                 } else if (result == ResultType.ACCOUNT_NO_SPACE) {

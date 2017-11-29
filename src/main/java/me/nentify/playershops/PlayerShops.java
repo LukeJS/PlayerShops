@@ -69,6 +69,7 @@ public class PlayerShops {
                         GenericArguments.doubleNum(Text.of("price")),
                         GenericArguments.optional(GenericArguments.integer(Text.of("quantity")))
                 )
+                .permission(PLUGIN_ID + ".create")
                 .executor(new ShopCommand())
                 .build();
 
