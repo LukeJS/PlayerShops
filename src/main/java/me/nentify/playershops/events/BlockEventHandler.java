@@ -180,8 +180,8 @@ public class BlockEventHandler {
                                         if (ChestUtils.hasQuantityOfItems(inv, item, quantity)) {
                                             if ((player.getInventory().size() < player.getInventory().capacity())) {
                                                 ResultType result = EconomyUtils.transferWithTax(
-                                                        account.get(),
                                                         ownerAccount.get(),
+                                                        account.get(),
                                                         defaultCurrency,
                                                         price,
                                                         BigDecimal.valueOf(Configuration.tax),
